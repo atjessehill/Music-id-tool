@@ -168,6 +168,8 @@ def digital_ocean_upload():
 
     ACCESS_KEY = os.getenv("API_KEY")
     SECRET_KEY = os.getenv("SECRET_KEY")
+    ENDPOINT = os.getenv("ENDPOINT")
+    REGION = os.getenv("REGION")
 
     upload_target = 'Full_Song/Felip_Rivellino/'
     get_all_files_in_folder(upload_target)
@@ -183,7 +185,7 @@ def digital_ocean_upload():
 
         session = boto3.session.Session()
 
-        client = session.client('s3', region_name='sfo2', endpoint_url='https://msk.sfo2.digitaloceanspaces.com/',
+        client = session.client('s3', region_name=REGION, endpoint_url=ENDPOINT,
                              aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
 
         for file in file_targets:
@@ -194,10 +196,12 @@ def do_get_share_links():
 
     ACCESS_KEY = os.getenv("API_KEY")
     SECRET_KEY = os.getenv("SECRET_KEY")
+    ENDPOINT = os.getenv("ENDPOINT")
+    REGION = os.getenv("REGION")
 
     session = boto3.session.Session()
 
-    client = session.client('s3', region_name='sfo2', endpoint_url='https://msk.sfo2.digitaloceanspaces.com/',
+    client = session.client('s3', region_name=REGION, endpoint_url=ENDPOINT,
                             aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
 
     url_list = []

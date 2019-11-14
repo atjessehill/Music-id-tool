@@ -1,4 +1,4 @@
-import os
+import os, glob
 from pydub import AudioSegment
 import requests
 import boto3
@@ -24,46 +24,45 @@ class SongSnip:
         # print("SONG:", self.Name, " : ", self.Artist, self.time_code, "\n", self.Spotify_Link, "\n")
         return "SONG:" + self.Name + " : " +  self.Artist + self.time_code + "\n" + self.Spotify_Link + " \n"
 
-def main(sc_url = None):
-    sc_url = 'https://soundcloud.com/egroove/egnu060-felipe-rivelino'
-    song_save_location = 'C:\\Users\\jesse\\Desktop\\Samples\\Full_Song'
+def download_sc_song(sc_url):
 
-    os_command = 'scdl -l '+ sc_url + ' --path ' + song_save_location
+    if not os.path.exists("temp"):
+        os.makedirs("temp")
 
-    #TODO Save Song Name
-
-    if (sc_url == None):
-        print("ERROR: No Soundcloud Link")
-        return
-    else:
-        os.system(os_command)
-
-def download_sc_song():
-    sc_url = 'https://soundcloud.com/egroove/egnu060-felipe-rivelino'
-    song_save_location = 'C:\\Users\\jesse\\Desktop\\Samples\\Full_Song'
-
-    os_command = 'scdl -l '+ sc_url + ' --path ' + song_save_location
-
-    #TODO Save Song Name
+    song_save_location = os.getcwd()
+    song_save_location = song_save_location +'\\temp\\'
 
     if (sc_url == None):
         print("ERROR: No Soundcloud Link")
         return
     else:
+        os_command = 'scdl -l ' + sc_url + ' --path ' + song_save_location
+
         os.system(os_command)
 
 
-def slice_song(id): # Get ID
-    mp3_song = AudioSegment.from_file(id)
+def slice_song():
+
+    filepath = "\\"+glob.glob('temp/*.mp3')[0]
+    filepath = os.getcwd()+filepath
+
+    try:
+        mp3_song = AudioSegment.from_file(filepath)
+    except:
+        print("NO .mp3 FOUND IN SLICE_SONG")
+        return
+
+    if not os.path.exists("temp/snippets"):
+        os.makedirs("temp/snippets")
+
 
     second = 1000
     halfmin = 30000
     minute = 60000
 
-    print(len(mp3_song))
     length = len(mp3_song)
     name = 'f'
-    save_path = 'Full_Song/Felip_Rivellino/'
+    save_path = 'temp/snippets/'
 
     if length < 10*minute:
         time_slice = halfmin
@@ -233,13 +232,14 @@ def test_keys():
 
 if __name__ == '__main__':
     load_dotenv()
+
+    # download_sc_song('https://soundcloud.com/christravis/7-tonight')
     # Download SC Song and Save to location
 
     # Slice Song
 
     # download_sc_song()
-    # main()
-    # slice_song("Full_Song/EGNU.060 Felip Rivellino.mp3")
+    slice_song()
     # search_song()
     # digital_ocean_upload()
     # urls = do_get_share_links()
@@ -248,4 +248,4 @@ if __name__ == '__main__':
     #
     # file_write(songs)
 
-    test_keys()
+    # test_keys()

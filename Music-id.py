@@ -5,6 +5,7 @@ import boto3
 from botocore.client import Config
 import json
 from dotenv import load_dotenv
+import shutil
 
 class SongSnip:
 
@@ -223,6 +224,16 @@ def file_write(songs):
         print(i.return_print())
         file1.write(i.return_print())
 
+def cleanup():
+
+    path = os.getcwd()
+
+
+    try:
+        shutil.rmtree(path+"\\temp")
+    except:
+        print("Could not find files to delete")
+
 def test_keys():
 
     key1 = os.getenv("AUDD_KEY")
@@ -239,7 +250,7 @@ if __name__ == '__main__':
     # Slice Song
 
     # download_sc_song()
-    slice_song()
+    # slice_song()
     # search_song()
     # digital_ocean_upload()
     # urls = do_get_share_links()
@@ -248,4 +259,4 @@ if __name__ == '__main__':
     #
     # file_write(songs)
 
-    # test_keys()
+    cleanup()
